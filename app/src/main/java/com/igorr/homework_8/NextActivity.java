@@ -3,6 +3,7 @@ package com.igorr.homework_8;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,12 +28,9 @@ import main.fragments.FragmentRed;
  * Created by Igorr on 02.02.2018.
  */
 
-public class NextActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class NextActivity extends AppCompatActivity {
     @BindView(R.id.toolBar)
     Toolbar toolbar;
-    @BindView(R.id.drawerLayout)
-    DrawerLayout drawerLayout;
     private FragmentManager fragManager;
 
     @Override
@@ -40,19 +38,19 @@ public class NextActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
         fragManager = getSupportFragmentManager();
-
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        //Добавить "гамбургер"
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
 
-        //Установить обработчик для навигации
-        NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
+        //Обработчик BottomNavigationView
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        return selector(item);
+                    }
+                });
     }
 
     //Добавить меню справа (три точки)
@@ -63,27 +61,14 @@ public class NextActivity extends AppCompatActivity
         return true;
     }
 
-    //Обработчик меню "слева"
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.redFragment:
-                showScreen(new FragmentRed(),0);
-                return true;
-            case R.id.greenFragment:
-                showScreen(new FragmentGreen(), 0);
-                return true;
-            case R.id.purpleFragment:
-                showScreen(new FragmentPurple(), 0);
-                return true;
-        }
-        return false;
-    }
-
     //Обработчик меню "справа"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        return selector(item);
+    }
+
+    private boolean selector(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save:
                 showScreen(new FragmentRed(), R.string.save);
@@ -101,11 +86,7 @@ public class NextActivity extends AppCompatActivity
     private void showScreen(Fragment fragment, int msg) {
         if (msg != 0) {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            Log.d("showScreen","msg != 0");
-        }
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
-            Log.d("showScreen","isDrawerVisible");
+            Log.d("showScreen", "msg != 0");
         }
         FragmentTransaction transaction = fragManager.beginTransaction();
         transaction.replace(R.id.mainFrameContent, fragment);

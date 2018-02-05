@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,30 +40,25 @@ public class MainActivity extends AppCompatActivity
         fragManager = getSupportFragmentManager();
 
         setSupportActionBar(toolBar);
-        ActionBar mainActionBar = getSupportActionBar();
-        if (mainActionBar != null) {
-            mainActionBar.setDisplayHomeAsUpEnabled(true);
-            mainActionBar.setTitle(R.string.mainActivity);
-        }
+        //Добавить "гамбургер"
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
+                toolBar, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     //Действия кнопки "назад"
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            if (fragManager.getFragments().isEmpty()) {
-                Toast.makeText(this, "Нет фрагментов в стеке", Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            fragManager.popBackStack();
-            toolBar.setTitle(R.string.title_actv1);
-        }
-        return true;
+    public void onBackPressed() {
+        if (fragManager.getFragments().isEmpty())
+            Toast.makeText(this, "Нет фрагментов в стеке", Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 
+    //Обработчик меню в DrawerLayout
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
