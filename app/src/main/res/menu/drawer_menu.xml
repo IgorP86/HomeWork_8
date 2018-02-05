@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "@layout/activity_main">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/redFragment"
+            android:icon="@drawable/ic_red_item_24dp"
+            android:title="@string/title_red"/>
+        <item
+            android:id="@+id/purpleFragment"
+            android:icon="@drawable/ic_purple_item_24dp"
+            android:title="@string/title_purple"/>
+        <item
+            android:id="@+id/greenFragment"
+            android:icon="@drawable/ic_green_24dp"
+            android:title="@string/title_green"/>
+        <item
+            android:id="@+id/nextActivity"
+            android:icon="@drawable/ic_arrow_forward_black_24dp"
+            android:title="@string/title_next"/>
+    </group>
+</menu>

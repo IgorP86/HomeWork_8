@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Название приложения</string>
+    <string name="mainActivity">Свое название</string>
+    <string name="title_red">Красный</string>
+    <string name="title_purple">Фиолетовый</string>
+    <string name="title_green">Зеленый</string>
+    <string name="title_next">Далее…</string>
+    <string name="name">Пользователь</string>
+    <string name="address">Адрес электронной почты</string>
+
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="title_actv2">Второй экран</string>
+    <string name="title_actv1">Navigation Drawer + ActionBar</string>
+    <string name="title_actv3">ViewPager...</string>
+    <string name="load">Загрузить</string>
+    <string name="save">Сохранить</string>
+
+</resources>
