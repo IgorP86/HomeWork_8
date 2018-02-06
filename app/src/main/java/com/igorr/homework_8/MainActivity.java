@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity
         fragManager = getSupportFragmentManager();
 
         setSupportActionBar(toolBar);
-        //Добавить "гамбургер"
+
+        //Добавить значок слева
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
                 toolBar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
