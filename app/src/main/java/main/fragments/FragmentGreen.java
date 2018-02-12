@@ -15,7 +15,6 @@ import com.igorr.homework_8.R;
 public class FragmentGreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle bundle) {
-
         return inflater.inflate(R.layout.fragment_green, parent, false);
     }
 }

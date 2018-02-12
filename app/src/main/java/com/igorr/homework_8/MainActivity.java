@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +29,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawerLayout)
     protected DrawerLayout drawerLayout;
     @BindView(R.id.toolBar)
-    Toolbar toolBar;
+    protected Toolbar toolbar;
+    @BindView(R.id.navigationView)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,49 +40,53 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         fragManager = getSupportFragmentManager();
 
-        setSupportActionBar(toolBar);
+        setSupportActionBar(toolbar);
 
         //Добавить значок слева
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolBar, R.string.open, R.string.close);
+                toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.navigationView);
+        //Слушатель событий для DrawerLayout
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    //Действия кнопки "назад"
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toolbar.setTitle(R.string.title_actv1);
+        Log.d("onResume","");
+    }
+
+    //Действия кнопки "назад"(чтобы не сворачивала приложение)
     @Override
     public void onBackPressed() {
-        if (fragManager.getFragments().isEmpty())
-            Toast.makeText(this, "Нет фрагментов в стеке", Toast.LENGTH_LONG).show();
-        super.onBackPressed();
+        if (!fragManager.getFragments().isEmpty())fragManager.popBackStack();
+        else Toast.makeText(this, "Нет фрагментов в стеке", Toast.LENGTH_LONG).show();
     }
 
     //Обработчик меню в DrawerLayout
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         FragmentTransaction transaction = fragManager.beginTransaction();
-        if (item.getItemId() == R.id.greenFragment) {
-            transaction.add(R.id.mainFrameContent, new FragmentGreen());
-        } else if (item.getItemId() == R.id.redFragment)
-            transaction.replace(R.id.mainFrameContent, new FragmentRed());
-        else if (item.getItemId() == R.id.purpleFragment)
-            transaction.replace(R.id.mainFrameContent, new FragmentPurple());
-        else if (item.getItemId() == R.id.nextActivity) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, NextActivity.class));
-            return true;
+        toolbar.setTitle(item.getTitle());
+        switch (item.getItemId()) {
+            case R.id.greenFragment:
+                transaction.replace(R.id.frameContent, new FragmentGreen());
+                break;
+            case R.id.redFragment:
+                transaction.replace(R.id.frameContent, new FragmentRed());
+                break;
+            case R.id.purpleFragment:
+                transaction.replace(R.id.frameContent, new FragmentPurple());
+                break;
+            case R.id.mNextActivity:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NextActivity.class));
+                break;
         }
-        //Поменять название
-        toolBar.setTitle(item.getTitle());
-        //убрать DrawerLayout
         drawerLayout.closeDrawer(GravityCompat.START);
         transaction.addToBackStack(null).commit();
         return true;
     }
-
-
 }

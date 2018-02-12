@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/group_hide">
         <item
-            android:id="@+id/save"
-            android:icon="@drawable/ic_red_item_24dp"
-            android:title="@string/save"/>
+            android:id="@+id/mOrange"
+            android:icon="@drawable/ic_arrow_forward_black_24dp"
+            android:title="@string/orange" />
         <item
-            android:id="@+id/load"
+            android:id="@+id/mEmerald"
             android:icon="@drawable/ic_purple_item_24dp"
-            android:title="@string/load"/>
+            android:title="@string/emerald"
+            app:showAsAction="ifRoom" />
         <item
-            android:id="@+id/nextActivity"
+            android:id="@+id/mAzure"
             android:icon="@drawable/ic_green_24dp"
-            android:title="@string/title_actv3"/>
+            android:title="@string/azure"
+            app:showAsAction="ifRoom|withText"/>
     </group>
 </menu>
