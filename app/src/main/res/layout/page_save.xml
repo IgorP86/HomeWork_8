@@ -6,7 +6,7 @@
     android:background="@color/colorPurple">
 
     <TextView
-        android:id="@+id/pageTextView"
+        android:id="@+id/pageSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

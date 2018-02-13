@@ -39,6 +39,9 @@ public class FragmentLoad extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        titleChangeListener.titleChange(((TextView) getActivity().findViewById(R.id.pageTextView)).getText());
+        TextView tv = getActivity().findViewById(R.id.pageLoad);
+        CharSequence ch = tv.getText();
+        titleChangeListener.titleChange(ch);
+        //  titleChangeListener.titleChange(((TextView) getActivity().findViewById(R.id.pageLoad)).getText());
     }
 }
