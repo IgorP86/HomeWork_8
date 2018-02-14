@@ -12,19 +12,26 @@ import android.widget.TextView;
 
 import com.igorr.homework_8.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Igorr on 08.02.2018.
  */
 
 public class FragmentLoad extends Fragment {
     public View view;
-    public TitleChangeListener titleChangeListener;
+    public ActionListener actionListener;
+    private Unbinder unbinder;
+    @BindView(R.id.pageLoad)
+    TextView textView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            titleChangeListener = (TitleChangeListener) context;
+            actionListener = (ActionListener) context;
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         }
@@ -38,10 +45,14 @@ public class FragmentLoad extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        unbinder = ButterKnife.bind(this, this.view);
         super.onActivityCreated(savedInstanceState);
-        TextView tv = getActivity().findViewById(R.id.pageLoad);
-        CharSequence ch = tv.getText();
-        titleChangeListener.titleChange(ch);
-        //  titleChangeListener.titleChange(((TextView) getActivity().findViewById(R.id.pageLoad)).getText());
+        actionListener.titleChange(textView.getText());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

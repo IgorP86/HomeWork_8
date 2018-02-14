@@ -3,11 +3,12 @@ package com.igorr.homework_8;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,19 +16,20 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import nextActv.fragments.ActionListener;
 import nextActv.fragments.FragmentLoad;
 import nextActv.fragments.FragmentSave;
 import nextActv.fragments.FragmentVPager;
-import nextActv.fragments.TitleChangeListener;
 
 /**
  * Created by Igorr on 02.02.2018.
  */
 
-public class NextActivity extends AppCompatActivity implements TitleChangeListener {
+public class NextActivity extends AppCompatActivity implements ActionListener {
     @BindView(R.id.toolBar)
     Toolbar toolbar;
     private FragmentManager fragManager;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class NextActivity extends AppCompatActivity implements TitleChangeListen
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -47,6 +49,27 @@ public class NextActivity extends AppCompatActivity implements TitleChangeListen
                         return selector(item);
                     }
                 });
+
+        //восстановление данных
+        if (savedInstanceState != null) {
+            state = savedInstanceState.getInt("key");
+            bottomNavigationView.setSelectedItemId(state);
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.mSave);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("onResume", "Activity");
+    }
+
+    //Сохранение состояния
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("key", state);
     }
 
     //Добавить меню справа
@@ -56,11 +79,25 @@ public class NextActivity extends AppCompatActivity implements TitleChangeListen
         return true;
     }
 
-    //Обработчик меню "справа"
+    //Обработчик меню выбора цвета
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        View background = null;
         try {
-            View background = findViewById(R.id.pageBackground);
+            if (fragManager.findFragmentByTag("save").isVisible()) {
+                background = findViewById(R.id.pageBackgroundSave);
+            } else if (fragManager.findFragmentByTag("load").isVisible()) {
+                background = findViewById(R.id.pageBackgroundLoad);
+            } else if (fragManager.findFragmentByTag("pager").isVisible()) {
+                switch (((ViewPager) findViewById(R.id.pagerContainer)).getCurrentItem()) {
+                    case 0:
+                        background = findViewById(R.id.pageBackgroundSave);
+                        break;
+                    case 1:
+                        background = findViewById(R.id.pageBackgroundLoad);
+                        break;
+                }
+            }
             switch (item.getItemId()) {
                 case R.id.mOrange:
                     background.setBackgroundColor(getResources().getColor(R.color.colorOrange));
@@ -83,26 +120,26 @@ public class NextActivity extends AppCompatActivity implements TitleChangeListen
 
     //Обработка BottomNavigation
     private boolean selector(MenuItem item) {
-        toolbar.getMenu().setGroupVisible(R.id.group_hide, true);
         FragmentTransaction transaction = fragManager.beginTransaction();
         switch (item.getItemId()) {
             case R.id.mSave:
-                transaction.replace(R.id.frameContent, new FragmentSave());
+                transaction.replace(R.id.frameContent, new FragmentSave(), "save");
                 break;
             case R.id.mLoad:
-                transaction.replace(R.id.frameContent, new FragmentLoad());
+                transaction.replace(R.id.frameContent, new FragmentLoad(), "load");
                 break;
             case R.id.mNextActivity:
-                transaction.replace(R.id.frameContent, new FragmentVPager());
-                toolbar.getMenu().setGroupVisible(R.id.group_hide, false);
+                transaction.replace(R.id.frameContent, new FragmentVPager(), "pager");
                 break;
         }
         transaction.addToBackStack(null).commit();
+        state = item.getItemId();
         return true;
     }
 
+    //Менять название
     @Override
     public void titleChange(CharSequence title) {
-        toolbar.setTitle(title);
+        getSupportActionBar().setTitle(title);
     }
 }

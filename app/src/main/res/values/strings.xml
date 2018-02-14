@@ -9,7 +9,7 @@
 
     <string name="open">open</string>
     <string name="close">close</string>
-    <string name="title_actv1">Navigation Drawer + ActionBar</string>
+    <string name="title_actv1">Первый экран</string>
     <string name="title_actv2">Второй экран</string>
     <string name="title_actv3">ViewPager…</string>
     <string name="load">Загрузить</string>

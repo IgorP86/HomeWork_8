@@ -41,7 +41,14 @@ public class FragmentVPager extends Fragment {
 
         fragmentList.add(new FragmentSave());
         fragmentList.add(new FragmentLoad());
-        Log.d("debug", "onActivityCreated");
+        Log.d("size", Integer.toString(fragmentList.size()));
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fragmentList.clear();
     }
 
     class myFragPagerAdapter extends FragmentStatePagerAdapter {
@@ -53,7 +60,6 @@ public class FragmentVPager extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("getItem ", Integer.toString(position));
             return fragmentList.get(position);
         }
 
