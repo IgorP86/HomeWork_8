@@ -59,12 +59,6 @@ public class NextActivity extends AppCompatActivity implements ActionListener {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("onResume", "Activity");
-    }
-
     //Сохранение состояния
     @Override
     protected void onSaveInstanceState(Bundle outState) {
