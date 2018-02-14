@@ -17,8 +17,8 @@
             android:icon="@drawable/ic_green_24dp"
             android:title="@string/title_green"/>
         <item
-            android:id="@+id/nextActivity"
+            android:id="@+id/mNextActivity"
             android:icon="@drawable/ic_arrow_forward_black_24dp"
-            android:title="@string/title_next"/>
+            android:title="@string/title_actv3"/>
     </group>
 </menu>

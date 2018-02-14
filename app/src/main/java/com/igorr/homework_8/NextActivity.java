@@ -1,114 +1,139 @@
 package com.igorr.homework_8;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import main.fragments.FragmentGreen;
-import main.fragments.FragmentPurple;
-import main.fragments.FragmentRed;
+import nextActv.fragments.ActionListener;
+import nextActv.fragments.FragmentLoad;
+import nextActv.fragments.FragmentSave;
+import nextActv.fragments.FragmentVPager;
 
 /**
  * Created by Igorr on 02.02.2018.
  */
 
-public class NextActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class NextActivity extends AppCompatActivity implements ActionListener {
     @BindView(R.id.toolBar)
     Toolbar toolbar;
-    @BindView(R.id.drawerLayout)
-    DrawerLayout drawerLayout;
     private FragmentManager fragManager;
+    private int state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
+        ButterKnife.bind(this);
         fragManager = getSupportFragmentManager();
 
-        ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
-        //Добавить "гамбургер"
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //Установить обработчик для навигации
-        NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        return selector(item);
+                    }
+                });
+
+        //восстановление данных
+        if (savedInstanceState != null) {
+            state = savedInstanceState.getInt("key");
+            bottomNavigationView.setSelectedItemId(state);
+        } else {
+            bottomNavigationView.setSelectedItemId(R.id.mSave);
+        }
     }
 
-    //Добавить меню справа (три точки)
+    //Сохранение состояния
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("key", state);
+    }
+
+    //Добавить меню справа
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
 
-    //Обработчик меню "слева"
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.redFragment:
-                showScreen(new FragmentRed(),0);
-                return true;
-            case R.id.greenFragment:
-                showScreen(new FragmentGreen(), 0);
-                return true;
-            case R.id.purpleFragment:
-                showScreen(new FragmentPurple(), 0);
-                return true;
-        }
-        return false;
-    }
-
-    //Обработчик меню "справа"
+    //Обработчик меню выбора цвета
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.save:
-                showScreen(new FragmentRed(), R.string.save);
-                return true;
-            case R.id.load:
-                showScreen(new FragmentGreen(), R.string.load);
-                return true;
-            case R.id.nextActivity:
-                showScreen(new FragmentVPager(), R.string.title_next);
-                return true;
+        View background = null;
+        try {
+            if (fragManager.findFragmentByTag("save").isVisible()) {
+                background = findViewById(R.id.pageBackgroundSave);
+            } else if (fragManager.findFragmentByTag("load").isVisible()) {
+                background = findViewById(R.id.pageBackgroundLoad);
+            } else if (fragManager.findFragmentByTag("pager").isVisible()) {
+                switch (((ViewPager) findViewById(R.id.pagerContainer)).getCurrentItem()) {
+                    case 0:
+                        background = findViewById(R.id.pageBackgroundSave);
+                        break;
+                    case 1:
+                        background = findViewById(R.id.pageBackgroundLoad);
+                        break;
+                }
+            }
+            switch (item.getItemId()) {
+                case R.id.mOrange:
+                    background.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                    break;
+                case R.id.mEmerald:
+                    background.setBackgroundColor(getResources().getColor(R.color.colorEmerald));
+                    break;
+                case R.id.mAzure:
+                    background.setBackgroundColor(getResources().getColor(R.color.colorAzure));
+                    break;
+                case android.R.id.home:
+                    fragManager.popBackStack();
+                    break;
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Нет фрагментов", Toast.LENGTH_SHORT).show();
         }
-        return false;
+        return true;
     }
 
-    private void showScreen(Fragment fragment, int msg) {
-        if (msg != 0) {
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            Log.d("showScreen","msg != 0");
-        }
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
-            Log.d("showScreen","isDrawerVisible");
-        }
+    //Обработка BottomNavigation
+    private boolean selector(MenuItem item) {
         FragmentTransaction transaction = fragManager.beginTransaction();
-        transaction.replace(R.id.mainFrameContent, fragment);
+        switch (item.getItemId()) {
+            case R.id.mSave:
+                transaction.replace(R.id.frameContent, new FragmentSave(), "save");
+                break;
+            case R.id.mLoad:
+                transaction.replace(R.id.frameContent, new FragmentLoad(), "load");
+                break;
+            case R.id.mNextActivity:
+                transaction.replace(R.id.frameContent, new FragmentVPager(), "pager");
+                break;
+        }
         transaction.addToBackStack(null).commit();
+        state = item.getItemId();
+        return true;
+    }
+
+    //Менять название
+    @Override
+    public void titleChange(CharSequence title) {
+        getSupportActionBar().setTitle(title);
     }
 }

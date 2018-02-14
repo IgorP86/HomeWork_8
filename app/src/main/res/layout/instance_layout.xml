@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:id="@+id/appBar"
+        app:layout_insetEdge="top">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme" />
+            android:minHeight="?attr/actionBarSize" />
 
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/mainFrameContent"
+        android:id="@+id/frameContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        app:layout_dodgeInsetEdges="top">
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

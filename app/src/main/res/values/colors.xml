@@ -8,6 +8,9 @@
     <color name="colorPurple">#6c1979</color>
     <color name="colorGreen">#00ff55</color>
     <color name="colorFont">#FFFFFF</color>
+    <color name="colorAzure">#082567</color>
+    <color name="colorOrange">#ffa500</color>
+    <color name="colorEmerald">#00a86b</color>
 
 
 </resources>
